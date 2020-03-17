@@ -1,7 +1,6 @@
 ﻿@model Party_Invites.Models.GuestResponse
 @using System.Configuration;
-@using System.Net.Mail;
-@using System.Net;
+
 @{
     Layout = null;
 }
@@ -30,21 +29,13 @@
         try
         {
             WebMail.SmtpServer = ConfigurationManager.AppSettings["smtpHost"];
-            WebMail.SmtpPort = 587;
+            WebMail.SmtpPort = int.Parse(ConfigurationManager.AppSettings["smtpPort"]);
             WebMail.EnableSsl = true;
             WebMail.UserName = ConfigurationManager.AppSettings["smtpEmail"];
             WebMail.Password = ConfigurationManager.AppSettings["smtpPassword"]; ;
-            WebMail.From = "mohamed.bennourddine@gmail.com";
-            WebMail.Send("mohamed.bennourddine@gmail.com", "RSVP Notification",
+            WebMail.From = ConfigurationManager.AppSettings["smtpEmail"];
+            WebMail.Send(Model.Email, "RSVP Notification",
                                             Model.Name + " is " + (((bool)Model.WillAttend) ? " " : "not ") + "attending");
-
-            //SmtpClient smtpClient = new SmtpClient();
-            //System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("username", "password");
-            //smtpClient.Credentials = credentials;
-
-            //smtpClient.Send("mohamed.bennourddine@gmail.com", "mohamed.bennourddine@gmail.com", "RSVP Notification",
-            //                                Model.Name + " is " + (((bool)Model.WillAttend) ? " " : "not ") + "attending");
-
         }
         catch (Exception ex)
         {
